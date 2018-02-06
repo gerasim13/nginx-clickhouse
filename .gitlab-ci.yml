@@ -1,0 +1,19 @@
+stages:
+ - docker
+variables:
+  CI_REGISTRY: 'docker.start.film'
+docker:
+ stage: docker
+ services:
+  - docker:dind
+ before_script:
+  - docker info
+  - docker login -u gitlab -p nopasswd $CI_REGISTRY
+ script:
+  - docker build --no-cache -t $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME .
+  - docker tag $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME $CI_REGISTRY/$CI_PROJECT_NAME
+  - docker tag $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$CI_BUILD_REF_NAME
+  - docker push $CI_REGISTRY/$CI_PROJECT_NAME
+  - docker push $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME
+ tags:
+  - docker

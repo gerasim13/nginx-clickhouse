@@ -12,11 +12,11 @@ import (
 )
 
 func GetParser(config *config.Config) (*gonx.Parser, error) {
-
+    
 	// Use nginx config file to extract format by the name
 	nginxConfig := strings.NewReader(fmt.Sprintf("%s%s%s",`
 		http {
-			log_format   main  '`, config.Nginx.LogFormat, `';
+			log_format  '`, config.Nginx.LogType, `'  '`, config.Nginx.LogFormat, `';
 		}
 	`))
 

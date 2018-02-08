@@ -9,22 +9,32 @@ import (
 	"strconv"
 )
 
+type ColumnDescription struct {
+	Name string `yaml:"name"`
+	Key  string `yaml:"key"`
+	Type string `yaml:"type"`
+}
+
 type Config struct {
 	Settings struct {
 		Interval int    `yaml:"interval"`
 		LogPath  string `yaml:"log_path"`
 	} `yaml:"settings"`
+
 	ClickHouse struct {
-		Db          string            `yaml:"db"`
-		Table       string            `yaml:"table"`
-		Host        string            `yaml:"host"`
-		Port        string            `yaml:"port"`
-		Columns     map[string]string `yaml:"columns"`
+		Db    string `yaml:"db"`
+		Table string `yaml:"table"`
+		Host  string `yaml:"host"`
+		Port  string `yaml:"port"`
+
+		Columns []ColumnDescription `yaml:"columns"`
+
 		Credentials struct {
 			User     string `yaml:"user"`
 			Password string `yaml:"password"`
 		} `yaml:"credentials"`
 	} `yaml:"clickhouse"`
+
 	Nginx struct {
 		LogType   string `yaml:"log_type"`
 		LogFormat string `yaml:"log_format"`
@@ -32,7 +42,6 @@ type Config struct {
 }
 
 var configPath string
-
 var NginxTimeLayout = "02/Jan/2006:15:04:05 -0700"
 var CHTimeLayout = "2006-01-02 15:04:05"
 
@@ -42,9 +51,7 @@ func init() {
 }
 
 func Read() *Config {
-
 	config := Config{}
-
 	logrus.Info("Reading config file: " + configPath)
 
 	var data, err = ioutil.ReadFile(configPath)
@@ -61,26 +68,20 @@ func Read() *Config {
 }
 
 func (c *Config) SetEnvVariables() {
-
 	// Settings
-
 	if os.Getenv("LOG_PATH") != "" {
 		c.Settings.LogPath = os.Getenv("LOG_PATH")
 	}
 
 	if os.Getenv("FLUSH_INTERVAL") != "" {
-
 		var flushInterval, err = strconv.Atoi(os.Getenv("FLUSH_INTERVAL"))
-
 		if err != nil {
 			logrus.Errorf("error to convert FLUSH_INTERVAL string to int: %v", err)
 		}
-
 		c.Settings.Interval = flushInterval
 	}
 
 	// ClickHouse
-
 	if os.Getenv("CLICKHOUSE_HOST") != "" {
 		c.ClickHouse.Host = os.Getenv("CLICKHOUSE_HOST")
 	}
@@ -106,7 +107,6 @@ func (c *Config) SetEnvVariables() {
 	}
 
 	// Nginx
-
 	if os.Getenv("NGINX_LOG_TYPE") != "" {
 		c.Nginx.LogType = os.Getenv("NGINX_LOG_TYPE")
 	}

@@ -1,7 +1,7 @@
 package nginx
 
 import (
-	"github.com/mintance/nginx-clickhouse/config"
+	"github.com/gerasim13/nginx-clickhouse/config"
 	"github.com/satyrius/gonx"
 	"io"
 	"strconv"
@@ -12,57 +12,45 @@ import (
 )
 
 func GetParser(config *config.Config) (*gonx.Parser, error) {
-    
 	// Use nginx config file to extract format by the name
-	nginxConfig := strings.NewReader(fmt.Sprintf("%s%s%s",`
+	nginxConfig := strings.NewReader(fmt.Sprintf("%s%s%s%s", `
 		http {
 			log_format  '`, config.Nginx.LogType, `'  '`, config.Nginx.LogFormat, `';
 		}
 	`))
-
 	return gonx.NewNginxParser(nginxConfig, config.Nginx.LogType)
 }
 
-func ParseField(key string, value string) interface{} {
+func ParseField(key string, value_type string, value string) interface{} {
+	switch value_type {
+		case "time", "Time":
+			t, err := time.Parse(config.NginxTimeLayout, value)
+			if err == nil {
+				return t.Format(config.CHTimeLayout)
+			}
+			return value
 
-	switch key {
-	case "time_local":
+		case "int", "Int":
+			val, err := strconv.Atoi(value)
+			if err != nil {
+				logrus.Error("Error to convert string to int")
+			}
+			return val
 
-		t, err := time.Parse(config.NginxTimeLayout, value)
+		case "float", "Float":
+			val, err := strconv.ParseFloat(value, 32)
+			if err != nil {
+				logrus.Error("Error to convert string to float32")
+			}
+			return val
 
-		if err == nil {
-			return t.Format(config.CHTimeLayout)
-		}
-
-		return value
-
-	case "remote_addr", "remote_user", "request", "http_referer", "http_user_agent", "request_method", "https":
-		return value
-	case "bytes_sent", "connections_waiting", "connections_active", "status":
-		val, err := strconv.Atoi(value)
-
-		if err != nil {
-			logrus.Error("Error to convert string to int")
-		}
-
-		return val
-	case "request_time", "upstream_connect_time", "upstream_header_time", "upstream_response_time":
-		val, err := strconv.ParseFloat(value, 32)
-
-		if err != nil {
-			logrus.Error("Error to convert string to float32")
-		}
-
-		return val
-	default:
-		return value
+		default:
+			return value
 	}
-
 	return value
 }
 
 func ParseLogs(parser *gonx.Parser, logLines []string) []gonx.Entry {
-
 	logReader := strings.NewReader(strings.Join(logLines, "\n"))
 	reader := gonx.NewParserReader(logReader, parser)
 

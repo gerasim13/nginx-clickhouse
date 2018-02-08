@@ -1,28 +1,61 @@
-# Settings
 settings:
-  interval: 5 # in seconds
-  log_path: logs/test.log # path to logfile
+  interval: 5
+  log_path: /var/log/nginx/access.log
 
-# ClickHouse credentials
 clickhouse:
- db: metrics
- table: nginx
- host: localhost
- port: 8123
- credentials:
-  user: default
-  password:
- columns:
-   RemoteAddr: remote_addr
-   RemoteUser: remote_user
-   TimeLocal: time_local
-   Request: request
-   Status: status
-   BytesSent: bytes_sent
-   HttpReferer: http_referer
-   HttpUserAgent: http_user_agent
+  db: start
+  table: events
+  host: 172.17.0.1
+  port: 8123
+  credentials:
+    user: default
+    password:
+  columns:
+    - name: environment
+      key: arg_environment
+      type: string
+#    event_producer: arg_event_producer
+#    screen_type: arg_screen_type
+#    screen_attributes_id: arg_screen_attributes_id
+#    screen_attributes_num: arg_screen_attributes_num
+#    referer_screen_type: arg_referer_screen_type
+#    referer_screen_attributes_id: arg_referer_screen_attributes_id
+#    referer_screen_attributes_num: arg_referer_screen_attributes_num
+#    block_type: arg_block_type
+#    block_attributes_id: arg_block_attributes_id
+#    block_attributes_index: arg_block_attributes_index
+#    block_attributes_tag: arg_block_attributes_tag
+#    element_type: arg_element_type
+#    element_attributes_id: arg_element_attributes_id
+#    element_attributes_index: arg_element_attributes_index
+#    element_attributes_tag: arg_element_attributes_tag
+#    action_id: arg_action_id
+#    action_attributes_str: arg_action_attributes_str
+#    action_attributes_num: arg_action_attributes_num
+#    profile_uid: arg_profile_uid
+#    account_id: arg_account_id
+#    account_type: arg_account_type
+#    profile_for_child: arg_profile_for_child
+#    traffic_source: arg_traffic_source
+#    content_uid: arg_content_uid
+#    referer_content_uid: arg_referer_content_uid
+#    device_uid: arg_device_uid
+#    device_type: arg_device_type
+#    device_model: arg_device_model
+#    device_vendor: arg_device_vendor
+#    platform_id: arg_platform_id
+#    platform_api_key: arg_apikey
+#    user_agent: http_user_agent
+#    user_screen_width: arg_user_screen_width
+#    user_screen_height: arg_user_screen_height
+#    request_country: http_country_code
+#    request_ip: remote_addr
+#    request_referer: http_referer
+#    client_version: arg_client_version
+#    server_version: arg_server_version
+#    time_local: time_local
+#    event_time: arg_event_time
 
-# NGINX
 nginx:
-  log_type: main
-  log_format: $remote_addr - $remote_user [$time_local] "$request" $status $bytes_sent "$http_referer" "$http_user_agent"
+  log_type: events
+  log_format: $arg_environment|$arg_event_producer|$arg_screen_type|$arg_screen_attributes_id|$arg_screen_attributes_num|$arg_referer_screen_type|$arg_referer_screen_attributes_id|$arg_referer_screen_attributes_num|$arg_block_type|$arg_block_attributes_id|$arg_block_attributes_index|$arg_block_attributes_tag|$arg_element_type|$arg_element_attributes_id|$arg_element_attributes_index|$arg_element_attributes_tag|$arg_action_id|$arg_action_attributes_str|$arg_action_attributes_num|$arg_profile_uid|$arg_account_id|$arg_account_type|$arg_profile_for_child|$arg_traffic_source|$arg_content_uid|$arg_referer_content_uid|$arg_device_uid|$arg_device_type|$arg_device_model|$arg_device_vendor|$arg_platform_id|$arg_apikey|$http_user_agent|$arg_user_screen_width|$arg_user_screen_height|$http_country_code|$remote_addr|$http_referer|$arg_client_version|$arg_server_version|$time_local|$arg_event_time

@@ -1,0 +1,17 @@
+version: "2"
+services:
+  nginx-logger:
+    image: docker.start.film/nginx-logger
+    container_name: nginx-logger
+    ports:
+      - "0.0.0.0:4080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./logs:/var/log/nginx/
+  nginx-clickhouse:
+    build: .
+    container_name: nginx-clickhouse
+    volumes:
+      - ./config-sample.yml:/config/config.yml
+    volumes_from:
+      - nginx-logger

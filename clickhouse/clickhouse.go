@@ -1,9 +1,8 @@
 package clickhouse
 
 import (
-	"github.com/mintance/go-clickhouse"
-	"github.com/mintance/nginx-clickhouse/config"
-	"github.com/mintance/nginx-clickhouse/nginx"
+	"github.com/gerasim13/nginx-clickhouse/config"
+	"github.com/gerasim13/nginx-clickhouse/nginx"
 	"github.com/satyrius/gonx"
 	"net/url"
 	"reflect"
@@ -49,17 +48,17 @@ func getColumns(columns map[string]string) []string {
 	return stringColumns
 }
 
-func buildRows(keys []string, columns map[string]string, data []gonx.Entry) (rows clickhouse.Rows) {
+func buildRows(keys []string, columns map[string]ColumnDescription, data []gonx.Entry) (rows clickhouse.Rows) {
 
 	for _, logEntry := range data {
 		row := clickhouse.Row{}
 
 		for _, column := range keys {
-			value, err := logEntry.Field(columns[column])
+			value, err := logEntry.Field(columns[column].Key)
 			if err != nil {
 				logrus.Errorf("error to build rows: %v", err)
 			}
-			row = append(row, nginx.ParseField(columns[column], value))
+			row = append(row, nginx.ParseField(columns[column], columns[column].Type, value))
 		}
 
 		rows = append(rows, row)

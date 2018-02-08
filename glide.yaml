@@ -1,7 +1,7 @@
-package: mintance/nginx-clickhouse
+package: gerasim13/nginx-clickhouse
 import:
 - package: gopkg.in/yaml.v2
 - package: github.com/Sirupsen/logrus
   version: ~1.0.3
 - package: github.com/satyrius/gonx
-- package: github.com/mintance/go-clickhouse
+- package: github.com/gerasim13/go-clickhouse

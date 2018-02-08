@@ -27,7 +27,7 @@ type Config struct {
 		Host  string `yaml:"host"`
 		Port  string `yaml:"port"`
 
-		Columns []ColumnDescription `yaml:"columns"`
+		Columns map[string]ColumnDescription `yaml:"columns"`
 
 		Credentials struct {
 			User     string `yaml:"user"`

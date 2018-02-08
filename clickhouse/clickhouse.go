@@ -35,7 +35,7 @@ func Save(config *config.Config, logs []gonx.Entry) error {
 	return query.Exec(storage)
 }
 
-func getColumns(columns []config.ColumnDescription) []string {
+func getColumns(columns map[string]config.ColumnDescription) []string {
 
 	keys := reflect.ValueOf(columns).MapKeys()
 	stringColumns := make([]string, len(keys))
@@ -47,7 +47,7 @@ func getColumns(columns []config.ColumnDescription) []string {
 	return stringColumns
 }
 
-func buildRows(columns []config.ColumnDescription, data []gonx.Entry) (
+func buildRows(columns map[string]config.ColumnDescription, data []gonx.Entry) (
 	rows clickhouse.Rows, cols clickhouse.Columns) {
 
 	for _, logEntry := range data {

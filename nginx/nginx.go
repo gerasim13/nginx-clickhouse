@@ -21,7 +21,7 @@ func GetParser(config *config.Config) (*gonx.Parser, error) {
 	return gonx.NewNginxParser(nginxConfig, config.Nginx.LogType)
 }
 
-func ParseField(key string, value_type string, value string) interface{} {
+func ParseField(value_type string, value string) interface{} {
 	switch value_type {
 		case "time", "Time":
 			t, err := time.Parse(config.NginxTimeLayout, value)

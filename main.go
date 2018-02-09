@@ -1,7 +1,7 @@
 package main
 
 import (
-	configParser "./config"
+	configParser "github.com/gerasim13/nginx-clickhouse/config"
 	"./clickhouse"
 	"./nginx"
 	"github.com/Sirupsen/logrus"

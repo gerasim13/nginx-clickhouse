@@ -9,8 +9,10 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf
       - ./logs:/var/log/nginx/
   nginx-clickhouse:
-    build: .
+    #vbuild: .
+    image: docker.start.film/nginx-clickhouse
     container_name: nginx-clickhouse
+    command: /nginx-clickhouse -config_path /config/config.yml
     volumes:
       - ./config-sample.yml:/config/config.yml
     volumes_from:

@@ -1,7 +1,7 @@
 package nginx
 
 import (
-	"../config"
+	"github.com/gerasim13/nginx-clickhouse/config"
 	"github.com/satyrius/gonx"
 	"io"
 	"strconv"

@@ -1,13 +1,13 @@
 package clickhouse
 
 import (
-	"../nginx"
+	"github.com/gerasim13/nginx-clickhouse/nginx"
 	"github.com/mintance/go-clickhouse"
 	"github.com/satyrius/gonx"
 	"github.com/Sirupsen/logrus"
 	"net/url"
 	"reflect"
-	config "../config"
+	config "github.com/gerasim13/nginx-clickhouse/config"
 )
 
 var clickHouseStorage *clickhouse.Conn

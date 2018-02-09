@@ -1,6 +1,6 @@
 settings:
   interval: 5
-  log_path: /var/log/nginx/access.log
+  log_path: ./logs/access.log
 
 clickhouse:
   db: start

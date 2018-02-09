@@ -1,9 +1,9 @@
 package main
 
 import (
-	configParser "github.com/gerasim13/nginx-clickhouse/config"
-	"github.com/gerasim13/nginx-clickhouse/clickhouse"
-	"github.com/gerasim13/nginx-clickhouse/nginx"
+	configParser "./config"
+	"./clickhouse"
+	"./nginx"
 	"github.com/Sirupsen/logrus"
 	"github.com/hpcloud/tail"
 	"sync"

@@ -1,7 +1,7 @@
 package nginx
 
 import (
-	"github.com/gerasim13/nginx-clickhouse/config"
+	"../config"
 	"github.com/satyrius/gonx"
 	"io"
 	"strconv"
@@ -13,11 +13,11 @@ import (
 
 func GetParser(config *config.Config) (*gonx.Parser, error) {
 	// Use nginx config file to extract format by the name
-	nginxConfig := strings.NewReader(fmt.Sprintf("%s%s%s%s", `
-		http {
-			log_format  '`, config.Nginx.LogType, `'  '`, config.Nginx.LogFormat, `';
-		}
-	`))
+	confString := fmt.Sprintf("%s%s%s%s%s",`
+	http {
+		log_format  `, config.Nginx.LogType, `  '`, config.Nginx.LogFormat, `';
+	}`)
+	nginxConfig := strings.NewReader(confString)
 	return gonx.NewNginxParser(nginxConfig, config.Nginx.LogType)
 }
 

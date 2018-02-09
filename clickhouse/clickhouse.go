@@ -1,27 +1,24 @@
 package clickhouse
 
 import (
-	"github.com/gerasim13/nginx-clickhouse/nginx"
+	"../nginx"
 	"github.com/mintance/go-clickhouse"
 	"github.com/satyrius/gonx"
 	"github.com/Sirupsen/logrus"
 	"net/url"
 	"reflect"
-	config "github.com/gerasim13/nginx-clickhouse/config"
+	config "../config"
 )
 
 var clickHouseStorage *clickhouse.Conn
 
 func Save(config *config.Config, logs []gonx.Entry) error {
-
 	storage, err := getStorage(config)
-
 	if err != nil {
 		return err
 	}
 
 	rows, columns := buildRows(config.ClickHouse.Columns, logs)
-
 	query, err := clickhouse.BuildMultiInsert(
 		config.ClickHouse.Db+"."+config.ClickHouse.Table,
 		columns,
@@ -35,8 +32,7 @@ func Save(config *config.Config, logs []gonx.Entry) error {
 	return query.Exec(storage)
 }
 
-func getColumns(columns map[string]config.ColumnDescription) []string {
-
+func getColumns(columns []config.ColumnDescription) []string {
 	keys := reflect.ValueOf(columns).MapKeys()
 	stringColumns := make([]string, len(keys))
 
@@ -47,7 +43,7 @@ func getColumns(columns map[string]config.ColumnDescription) []string {
 	return stringColumns
 }
 
-func buildRows(columns map[string]config.ColumnDescription, data []gonx.Entry) (
+func buildRows(columns []config.ColumnDescription, data []gonx.Entry) (
 	rows clickhouse.Rows, cols clickhouse.Columns) {
 
 	for _, logEntry := range data {
@@ -68,7 +64,6 @@ func buildRows(columns map[string]config.ColumnDescription, data []gonx.Entry) (
 }
 
 func getStorage(config *config.Config) (*clickhouse.Conn, error) {
-
 	if clickHouseStorage != nil {
 		return clickHouseStorage, nil
 	}

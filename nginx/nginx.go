@@ -22,6 +22,9 @@ func GetParser(config *config.Config) (*gonx.Parser, error) {
 }
 
 func ParseField(value_type string, value string) interface{} {
+	if value == "-" {
+		value = ""
+	}
 	switch value_type {
 		case "time", "Time":
 			t, err := time.Parse(config.NginxTimeLayout, value)

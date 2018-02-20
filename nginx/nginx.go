@@ -27,9 +27,7 @@ func EmptyValue(value_type string, value string) string {
 		return value
 	}
 	switch value_type {
-		case "time", "Time":
-		case "int", "Int":
-		case "float", "Float":
+		case "time", "Time", "int", "Int", "float", "Float":
 			return "0"
 		default:
 			break

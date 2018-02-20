@@ -3,6 +3,7 @@ package nginx
 import (
 	"github.com/gerasim13/nginx-clickhouse/config"
 	"github.com/satyrius/gonx"
+	"net/url"
 	"io"
 	"strconv"
 	"strings"
@@ -39,7 +40,7 @@ func ParseField(value_type string, value string) interface{} {
 			}
 			val, err := strconv.Atoi(value)
 			if err != nil {
-				logrus.Error(fmt.Sprintf("Error to convert string to int, %s", value))
+				logrus.Error(fmt.Sprintf("Error: failed to convert string to int, %s", value))
 			}
 			return val
 
@@ -49,7 +50,7 @@ func ParseField(value_type string, value string) interface{} {
 			}
 			val, err := strconv.ParseFloat(value, 32)
 			if err != nil {
-				logrus.Error(fmt.Sprintf("Error to convert string to float32, %s", value))
+				logrus.Error(fmt.Sprintf("Error: failed to convert string to float32, %s", value))
 			}
 			return val
 
@@ -57,7 +58,11 @@ func ParseField(value_type string, value string) interface{} {
 			if value == "-" {
 			    value = ""
 			}
-			return value
+			val, err := url.QueryUnescape(value)
+			if err != nil {
+				logrus.Error(fmt.Sprintf("Error: failed to decode string, %s", value))
+			}
+			return val
 	}
 	return value
 }

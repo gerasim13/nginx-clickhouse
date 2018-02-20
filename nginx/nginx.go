@@ -22,11 +22,11 @@ func GetParser(config *config.Config) (*gonx.Parser, error) {
 }
 
 func ParseField(value_type string, value string) interface{} {
-	if value == "-" {
-		value = ""
-	}
 	switch value_type {
 		case "time", "Time":
+			if value == "-" {
+			    value = "0"
+			}
 			t, err := time.Parse(config.NginxTimeLayout, value)
 			if err == nil {
 				return t.Format(config.CHTimeLayout)
@@ -34,6 +34,9 @@ func ParseField(value_type string, value string) interface{} {
 			return value
 
 		case "int", "Int":
+			if value == "-" {
+			    value = "0"
+			}
 			val, err := strconv.Atoi(value)
 			if err != nil {
 				logrus.Error(fmt.Sprintf("Error to convert string to int, %s", value))
@@ -41,6 +44,9 @@ func ParseField(value_type string, value string) interface{} {
 			return val
 
 		case "float", "Float":
+			if value == "-" {
+			    value = "0"
+			}
 			val, err := strconv.ParseFloat(value, 32)
 			if err != nil {
 				logrus.Error(fmt.Sprintf("Error to convert string to float32, %s", value))
@@ -48,6 +54,9 @@ func ParseField(value_type string, value string) interface{} {
 			return val
 
 		default:
+			if value == "-" {
+			    value = ""
+			}
 			return value
 	}
 	return value

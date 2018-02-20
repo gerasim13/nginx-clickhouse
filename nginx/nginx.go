@@ -32,7 +32,7 @@ func ParseField(value_type string, value string) interface{} {
 			}
 			break
 		default:
-			if value == "_" {
+			if value == "-" {
 				value = ""
 			}
 	}

@@ -22,21 +22,23 @@ func GetParser(config *config.Config) (*gonx.Parser, error) {
 	return gonx.NewNginxParser(nginxConfig, config.Nginx.LogType)
 }
 
-func ParseField(value_type string, value string) interface{} {
+func EmptyValue(value_type string, value string) string {
+	if value != "-" {
+		return value
+	}
 	switch value_type {
 		case "time", "Time":
 		case "int", "Int":
 		case "float", "Float":
-			if value == "-" {
-				value = "0"
-			}
-			break
+			return "0"
 		default:
-			if value == "-" {
-				value = ""
-			}
+			break
 	}
-	
+	return ""
+}
+
+func ParseField(value_type string, value string) interface{} {
+	value = EmptyValue(value_type, value)
 	switch value_type {
 		case "time", "Time":
 			t, err := time.Parse(config.NginxTimeLayout, value)
@@ -67,6 +69,7 @@ func ParseField(value_type string, value string) interface{} {
 				return val
 			}
 			logrus.Error(fmt.Sprintf("Error: failed to decode string, %s", value))
+			break
 	}
 	return value
 }

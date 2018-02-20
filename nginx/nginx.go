@@ -25,44 +25,48 @@ func GetParser(config *config.Config) (*gonx.Parser, error) {
 func ParseField(value_type string, value string) interface{} {
 	switch value_type {
 		case "time", "Time":
+		case "int", "Int":
+		case "float", "Float":
 			if value == "-" {
-			    value = "0"
+				value = "0"
 			}
+			break
+		default:
+			if value == "_" {
+				value = ""
+			}
+	}
+	
+	switch value_type {
+		case "time", "Time":
 			t, err := time.Parse(config.NginxTimeLayout, value)
 			if err == nil {
 				return t.Format(config.CHTimeLayout)
 			}
-			return value
+			break
 
 		case "int", "Int":
-			if value == "-" {
-			    value = "0"
-			}
 			val, err := strconv.Atoi(value)
-			if err != nil {
-				logrus.Error(fmt.Sprintf("Error: failed to convert string to int, %s", value))
+			if err == nil {
+				return val
 			}
-			return val
+			logrus.Error(fmt.Sprintf("Error: failed to convert string to int, %s", value))
+			break
 
 		case "float", "Float":
-			if value == "-" {
-			    value = "0"
-			}
 			val, err := strconv.ParseFloat(value, 32)
-			if err != nil {
-				logrus.Error(fmt.Sprintf("Error: failed to convert string to float32, %s", value))
+			if err == nil {
+				return val
 			}
-			return val
+			logrus.Error(fmt.Sprintf("Error: failed to convert string to float32, %s", value))
+			break
 
 		default:
-			if value == "-" {
-			    value = ""
-			}
 			val, err := url.QueryUnescape(value)
-			if err != nil {
-				logrus.Error(fmt.Sprintf("Error: failed to decode string, %s", value))
+			if err == nil {
+				return val
 			}
-			return val
+			logrus.Error(fmt.Sprintf("Error: failed to decode string, %s", value))
 	}
 	return value
 }

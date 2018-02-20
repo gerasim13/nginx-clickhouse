@@ -36,14 +36,14 @@ func ParseField(value_type string, value string) interface{} {
 		case "int", "Int":
 			val, err := strconv.Atoi(value)
 			if err != nil {
-				logrus.Error("Error to convert string to int")
+				logrus.Error(fmt.Sprintf("Error to convert string to int, %s", value))
 			}
 			return val
 
 		case "float", "Float":
 			val, err := strconv.ParseFloat(value, 32)
 			if err != nil {
-				logrus.Error("Error to convert string to float32")
+				logrus.Error(fmt.Sprintf("Error to convert string to float32, %s", value))
 			}
 			return val
 

@@ -35,8 +35,21 @@ func EmptyValue(value_type string, value string) string {
 	return ""
 }
 
+func BoolValue(value string) string {
+	switch value {
+		case "true", "True", "yes", "YES":
+			return "1"
+		case "false", "False", "no", "NO":
+			return "0"
+		default:
+			break
+	}
+	return value
+}
+
 func ParseField(value_type string, value string) interface{} {
 	value = EmptyValue(value_type, value)
+	value = BoolValue(value)
 	switch value_type {
 		case "time", "Time":
 			t, err := time.Parse(config.NginxTimeLayout, value)

@@ -24,7 +24,7 @@ func GetParser(config *config.Config) (*gonx.Parser, error) {
 
 func EmptyValue(value_type string, value string) string {
 	switch value {
-		case "undefined", "Undefined", "none", "None", "null", "Null", "NULL":
+		case "undefined", "Undefined", "none", "None", "null", "Null", "NULL", "":
 			value = "-"
 		default:
 			break
